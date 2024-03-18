@@ -26,21 +26,15 @@ namespace BookStore.DataAccess.Repositories
             return books;
         }
 
-        public async Task<Book?> Get(Guid id)
+        public async Task<Book?> GetById(Guid id)
         {
             var bookEntity = await _context.Books
                 .AsNoTracking()
                 .FirstOrDefaultAsync(b => b.Id == id);
 
-
-            if (bookEntity == null)
-            {
-                return null;
-            }
-
-            var book = Book.Create(bookEntity.Id, bookEntity.Title, bookEntity.Description, bookEntity.price).Book;
-
-            return book;
+            return bookEntity != null ? 
+                Book.Create(bookEntity.Id, bookEntity.Title, bookEntity.Description, bookEntity.price).Book
+                : null;
         }
 
         public async Task<Guid> Create(Book book)
