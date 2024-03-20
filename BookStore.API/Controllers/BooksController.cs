@@ -51,7 +51,7 @@ namespace BookStore.API.Controllers
             return Ok(book.Id);
         }
         
-        [HttpPut("id:guid")]
+        [HttpPut("{id:guid}")]
         public async Task<ActionResult<Guid>> UpdateBook(Guid id, [FromBody] BooksRequest request)
         {
             await _booksService.UpdateBook(id, request.Title, request.Description, request.Price);
@@ -59,7 +59,7 @@ namespace BookStore.API.Controllers
             return Ok(id);
         }
         
-        [HttpDelete("id:guid")]
+        [HttpDelete("{id:guid}")]
         public async Task<ActionResult<Guid>> DeleteBook(Guid id)
         {
             return Ok(await _booksService.DeleteBook(id));
