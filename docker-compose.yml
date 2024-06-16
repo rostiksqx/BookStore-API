@@ -1,0 +1,25 @@
+﻿services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Qwerty
+      POSTGRES_DB: BookStoreDB
+    volumes:
+      - /var/lib/postgresql/data
+  bookstore:
+    build:
+      context: .
+      dockerfile: BookStore.API/Dockerfile
+    environment:
+      - AllowedHosts=*
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DB_CONNECTION_STRING=Host=postgres;Port=5432;Database=BookStoreDB;Username=postgres;Password=Qwerty
+    ports:
+      - 8080:8080
+      - 8081:8081
+    depends_on:
+      - postgres
