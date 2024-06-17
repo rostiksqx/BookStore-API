@@ -1,6 +1,7 @@
 ﻿services:
   postgres:
     image: postgres:latest
+    container_name: postgres
     restart: always
     ports:
       - "5432:5432"
@@ -10,7 +11,9 @@
       POSTGRES_DB: BookStoreDB
     volumes:
       - /var/lib/postgresql/data
-  bookstore:
+  bookstore.api:
+    image: ${DOCKER_REGISTRY-}bookstoreapi
+    container_name: bookstore.api
     build:
       context: .
       dockerfile: BookStore.API/Dockerfile

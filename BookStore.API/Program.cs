@@ -1,3 +1,4 @@
+using BookStore.API;
 using BookStore.Application.Services;
 using BookStore.DataAccess;
 using BookStore.DataAccess.Repositories;
@@ -25,6 +26,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.ApplyMigrations();
 }
 
 app.UseHttpsRedirection();
