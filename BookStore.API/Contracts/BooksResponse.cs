@@ -4,4 +4,5 @@ public record BooksResponse(
     Guid Id,
     string Title,
     string Description,
-    decimal Price);
+    decimal Price,
+    string Image);

@@ -8,6 +8,8 @@
 
         public string Description { get; set; } = string.Empty;
 
-        public decimal price { get; set; }
+        public decimal Price { get; set; }
+        
+        public string Image { get; set; } = string.Empty;
     }
 }

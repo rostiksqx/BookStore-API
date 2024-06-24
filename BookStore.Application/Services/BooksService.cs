@@ -27,9 +27,9 @@ public class BooksService : IBooksService
         return await _booksRepository.Create(book);
     }
     
-    public async Task<Guid> UpdateBook(Guid id, string title, string description, decimal price)
+    public async Task<Guid> UpdateBook(Guid id, string title, string description, decimal price, string image)
     {
-        return await _booksRepository.Update(id, title, description, price);
+        return await _booksRepository.Update(id, title, description, price, image);
     }
     
     public async Task<Guid> DeleteBook(Guid id)

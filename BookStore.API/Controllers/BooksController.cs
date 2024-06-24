@@ -21,7 +21,7 @@ namespace BookStore.API.Controllers
         {
             var books = await _booksService.GetAllBooks();
             
-            var response = books.Select(b => new BooksResponse(b.Id, b.Title, b.Description, b.Price));
+            var response = books.Select(b => new BooksResponse(b.Id, b.Title, b.Description, b.Price, b.Image));
 
             return Ok(response);
         }
@@ -32,14 +32,16 @@ namespace BookStore.API.Controllers
             var book = await _booksService.GetBookById(id);
             
             return book != null ? 
-                Ok(new BooksResponse(book.Id, book.Title, book.Description, book.Price))
+                Ok(new BooksResponse(book.Id, book.Title, book.Description, book.Price, book.Image))
                 : NotFound("Book not found");
         }
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> CreateBook([FromBody] BooksRequest request)
+        public async Task<ActionResult<Guid>> CreateBook([FromForm] BooksRequest request)
         {
-            var (book, error) = Book.Create(Guid.NewGuid(), request.Title, request.Description, request.Price);
+            var imageByte = UploadImage(request.Image);
+            
+            var (book, error) = Book.Create(Guid.NewGuid(), request.Title, request.Description, request.Price, imageByte.Result);
 
             if (!string.IsNullOrEmpty(error))
             {
@@ -50,11 +52,33 @@ namespace BookStore.API.Controllers
             
             return Ok(book.Id);
         }
-        
-        [HttpPut("{id:guid}")]
-        public async Task<ActionResult<Guid>> UpdateBook(Guid id, [FromBody] BooksRequest request)
+
+        private async Task<string> UploadImage(IFormFile picture)
         {
-            await _booksService.UpdateBook(id, request.Title, request.Description, request.Price);
+            if (picture != null && picture.Length > 0)
+            {
+                if (picture.Length > 200 * 1024)
+                {
+                    return null;
+                }
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    await picture.CopyToAsync(memoryStream);
+                    var imageBytes = memoryStream.ToArray();
+                    
+                    return Convert.ToBase64String(imageBytes);
+                }
+            }
+
+            return null;
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<ActionResult<Guid>> UpdateBook(Guid id, [FromForm] BooksRequest request)
+        {
+            var imageByte = UploadImage(request.Image);
+            await _booksService.UpdateBook(id, request.Title, request.Description, request.Price, imageByte.Result);
             
             return Ok(id);
         }

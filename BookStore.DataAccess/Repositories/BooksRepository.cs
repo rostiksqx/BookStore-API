@@ -20,7 +20,7 @@ namespace BookStore.DataAccess.Repositories
                 .ToListAsync();
 
             var books = bookEntities
-                .Select(b => Book.Create(b.Id, b.Title, b.Description, b.price).Book)
+                .Select(b => Book.Create(b.Id, b.Title, b.Description, b.Price, b.Image).Book)
                 .ToList();
 
             return books;
@@ -33,7 +33,7 @@ namespace BookStore.DataAccess.Repositories
                 .FirstOrDefaultAsync(b => b.Id == id);
 
             return bookEntity != null ? 
-                Book.Create(bookEntity.Id, bookEntity.Title, bookEntity.Description, bookEntity.price).Book
+                Book.Create(bookEntity.Id, bookEntity.Title, bookEntity.Description, bookEntity.Price, bookEntity.Image).Book
                 : null;
         }
 
@@ -44,7 +44,8 @@ namespace BookStore.DataAccess.Repositories
                 Id = book.Id,
                 Title = book.Title,
                 Description = book.Description,
-                price = book.Price
+                Price = book.Price,
+                Image = book.Image
             };
 
             await _context.Books.AddAsync(bookEntity);
@@ -53,14 +54,15 @@ namespace BookStore.DataAccess.Repositories
             return bookEntity.Id;
         }
 
-        public async Task<Guid> Update(Guid id, string title, string description, decimal price)
+        public async Task<Guid> Update(Guid id, string title, string description, decimal price, string image)
         {
             await _context.Books
                 .Where(b => b.Id == id)
                 .ExecuteUpdateAsync(s => s
                     .SetProperty(b => b.Title, b => title)
                     .SetProperty(b => b.Description, b => description)
-                    .SetProperty(b => b.price, b => price));
+                    .SetProperty(b => b.Price, b => price)
+                    .SetProperty(b => b.Image, b => image));
 
             await _context.SaveChangesAsync();
 

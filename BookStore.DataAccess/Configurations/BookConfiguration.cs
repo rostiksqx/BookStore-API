@@ -18,7 +18,10 @@ namespace BookStore.DataAccess.Configurations
             builder.Property(b => b.Description)
                 .IsRequired();
 
-            builder.Property(b => b.price)
+            builder.Property(b => b.Price)
+                .IsRequired();
+
+            builder.Property(b => b.Image)
                 .IsRequired();
         }
     }

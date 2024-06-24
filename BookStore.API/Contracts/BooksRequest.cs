@@ -3,4 +3,5 @@
 public record BooksRequest(
     string Title,
     string Description,
-    decimal Price);
+    decimal Price,
+    IFormFile Image);
