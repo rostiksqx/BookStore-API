@@ -10,6 +10,8 @@
 
         public decimal Price { get; set; }
         
+        public List<BookCategory> BookCategories { get; set; } = new List<BookCategory>();
+        
         public string Image { get; set; } = string.Empty;
     }
 }
