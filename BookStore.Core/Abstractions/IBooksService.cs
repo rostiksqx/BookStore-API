@@ -6,7 +6,9 @@ public interface IBooksService
 {
     Task<List<Book>> GetAllBooks();
     Task<Book> GetBookById(Guid id);
-    Task<Guid> CreateBook(Book book);
-    Task<Guid> UpdateBook(Guid id, string title, string description, decimal price, string image);
+
+    Task<Guid> CreateBook(Guid id, string title, string description, decimal price, List<Guid> categoryIds,
+        string image);
+    Task<Guid> UpdateBook(Guid id, string title, string description, decimal price, List<Guid> categoryIds, string image);
     Task<Guid> DeleteBook(Guid id);
 }

@@ -16,11 +16,18 @@ namespace BookStore.DataAccess.Repositories
         public async Task<List<Book>> Get()
         {
             var bookEntities = await _context.Books
+                .Include(b => b.BookCategories)
+                .ThenInclude(bc => bc.Category)
                 .AsNoTracking()
                 .ToListAsync();
-
+            
             var books = bookEntities
-                .Select(b => Book.Create(b.Id, b.Title, b.Description, b.Price, b.Image).Book)
+                .Select(b => 
+                {
+                    var categories = b.BookCategories.Select(bc => Category.Create(bc.Category.Id, bc.Category.Name)).ToList();
+
+                    return Book.Create(b.Id, b.Title, b.Description, b.Price, categories, b.Image).Book;
+                })
                 .ToList();
 
             return books;
@@ -29,12 +36,19 @@ namespace BookStore.DataAccess.Repositories
         public async Task<Book?> GetById(Guid id)
         {
             var bookEntity = await _context.Books
+                .Include(b => b.BookCategories)
+                .ThenInclude(bc => bc.Category)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(b => b.Id == id);
 
-            return bookEntity != null ? 
-                Book.Create(bookEntity.Id, bookEntity.Title, bookEntity.Description, bookEntity.Price, bookEntity.Image).Book
-                : null;
+            if (bookEntity != null)
+            {
+                var categories = bookEntity.BookCategories.Select(bc => Category.Create(bc.Category.Id, bc.Category.Name)).ToList();
+
+                return Book.Create(bookEntity.Id, bookEntity.Title, bookEntity.Description, bookEntity.Price, categories, bookEntity.Image).Book;
+            }
+
+            return null;
         }
 
         public async Task<Guid> Create(Book book)
@@ -45,6 +59,7 @@ namespace BookStore.DataAccess.Repositories
                 Title = book.Title,
                 Description = book.Description,
                 Price = book.Price,
+                BookCategories = book.Categories.Select(c => new BookCategory { CategoryId = c.Id }).ToList(),
                 Image = book.Image
             };
 
@@ -54,17 +69,25 @@ namespace BookStore.DataAccess.Repositories
             return bookEntity.Id;
         }
 
-        public async Task<Guid> Update(Guid id, string title, string description, decimal price, string image)
+        public async Task<Guid> Update(Guid id, string title, string description, decimal price, List<Category> categories, string image)
         {
-            await _context.Books
-                .Where(b => b.Id == id)
-                .ExecuteUpdateAsync(s => s
-                    .SetProperty(b => b.Title, b => title)
-                    .SetProperty(b => b.Description, b => description)
-                    .SetProperty(b => b.Price, b => price)
-                    .SetProperty(b => b.Image, b => image));
+            var bookEntity = await _context.Books
+                .Include(b => b.BookCategories)
+                .FirstOrDefaultAsync(b => b.Id == id);
 
-            await _context.SaveChangesAsync();
+            if (bookEntity != null)
+            {
+                bookEntity.Title = title;
+                bookEntity.Description = description;
+                bookEntity.Price = price;
+                bookEntity.Image = image;
+
+                _context.BookCategories.RemoveRange(bookEntity.BookCategories);
+
+                bookEntity.BookCategories = categories.Select(c => new BookCategory { CategoryId = c.Id }).ToList();
+
+                await _context.SaveChangesAsync();
+            }
 
             return id;
         }

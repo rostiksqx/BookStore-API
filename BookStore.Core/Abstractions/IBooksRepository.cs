@@ -8,6 +8,8 @@ namespace BookStore.DataAccess.Repositories
         Task<Guid> Delete(Guid id);
         Task<List<Book>> Get();
         Task<Book?> GetById(Guid id);
-        Task<Guid> Update(Guid id, string title, string description, decimal price, string image);
+
+        Task<Guid> Update(Guid id, string title, string description, decimal price, List<Category> categories,
+            string image);
     }
 }

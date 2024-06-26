@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.DataAccess.Repositories;
 
-public class CategoryRepository : ICategoryRepository
+public class CategoriesRepository : ICategoriesRepository
 {
     private readonly BookStoreDbContext _context;
 
-    public CategoryRepository(BookStoreDbContext context)
+    public CategoriesRepository(BookStoreDbContext context)
     {
         _context = context;
     }

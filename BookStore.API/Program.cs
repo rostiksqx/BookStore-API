@@ -19,8 +19,8 @@ builder.Services.AddDbContext<BookStoreDbContext>(
 builder.Services.AddScoped<IBooksService, BooksService>();
 builder.Services.AddScoped<IBooksRepository, BooksRepository>();
 
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoriesService, CategoriesService>();
+builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
 
 var app = builder.Build();
 

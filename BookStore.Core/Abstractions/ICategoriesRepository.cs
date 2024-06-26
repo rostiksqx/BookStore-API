@@ -2,7 +2,7 @@
 
 namespace BookStore.DataAccess.Repositories;
 
-public interface ICategoryRepository
+public interface ICategoriesRepository
 {
     Task<List<Category>> Get();
     Task<Category?> GetById(Guid id);
