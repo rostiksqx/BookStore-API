@@ -19,6 +19,9 @@ builder.Services.AddDbContext<BookStoreDbContext>(
 builder.Services.AddScoped<IBooksService, BooksService>();
 builder.Services.AddScoped<IBooksRepository, BooksRepository>();
 
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
