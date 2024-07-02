@@ -21,7 +21,7 @@ namespace BookStore.API.Controllers
         {
             var books = await _booksService.GetAllBooks();
             
-            var response = books.Select(b => new BooksResponse(b.Id, b.Title, b.Description, b.Price, b.Categories, b.Image));
+            var response = books.Select(b => new BooksResponse(b.Id, b.Title, b.Description, b.Price, b.Author, b.PublishedDate, b.Categories, b.Image));
 
             return Ok(response);
         }
@@ -32,7 +32,7 @@ namespace BookStore.API.Controllers
             var book = await _booksService.GetBookById(id);
             
             return book != null ? 
-                Ok(new BooksResponse(book.Id, book.Title, book.Description, book.Price, book.Categories, book.Image))
+                Ok(new BooksResponse(book.Id, book.Title, book.Description, book.Price, book.Author, book.PublishedDate, book.Categories, book.Image))
                 : NotFound("Book not found");
         }
 
@@ -41,7 +41,7 @@ namespace BookStore.API.Controllers
         {
             var imageByte = UploadImage(request.Image);
             
-            var id = await _booksService.CreateBook(Guid.NewGuid(), request.Title, request.Description, request.Price, request.CategoryIds, imageByte.Result);
+            var id = await _booksService.CreateBook(Guid.NewGuid(), request.Title, request.Description, request.Price, request.Author, request.PublishedDate, request.CategoryIds, imageByte.Result);
             
             return Ok(id);
         }
@@ -71,7 +71,7 @@ namespace BookStore.API.Controllers
         public async Task<ActionResult<Guid>> UpdateBook(Guid id, [FromForm] BooksRequest request)
         {
             var imageByte = UploadImage(request.Image);
-            await _booksService.UpdateBook(id, request.Title, request.Description, request.Price, request.CategoryIds, imageByte.Result);
+            await _booksService.UpdateBook(id, request.Title, request.Description, request.Price, request.Author, request.PublishedDate, request.CategoryIds, imageByte.Result);
             
             return Ok(id);
         }

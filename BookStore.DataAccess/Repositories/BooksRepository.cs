@@ -26,7 +26,7 @@ namespace BookStore.DataAccess.Repositories
                 {
                     var categories = b.BookCategories.Select(bc => Category.Create(bc.Category.Id, bc.Category.Name)).ToList();
 
-                    return Book.Create(b.Id, b.Title, b.Description, b.Price, categories, b.Image).Book;
+                    return Book.Create(b.Id, b.Title, b.Description, b.Price, b.Author, b.PublishedDate, categories, b.Image).Book;
                 })
                 .ToList();
 
@@ -45,7 +45,7 @@ namespace BookStore.DataAccess.Repositories
             {
                 var categories = bookEntity.BookCategories.Select(bc => Category.Create(bc.Category.Id, bc.Category.Name)).ToList();
 
-                return Book.Create(bookEntity.Id, bookEntity.Title, bookEntity.Description, bookEntity.Price, categories, bookEntity.Image).Book;
+                return Book.Create(bookEntity.Id, bookEntity.Title, bookEntity.Description, bookEntity.Price, bookEntity.Author, bookEntity.PublishedDate, categories, bookEntity.Image).Book;
             }
 
             return null;
@@ -59,6 +59,8 @@ namespace BookStore.DataAccess.Repositories
                 Title = book.Title,
                 Description = book.Description,
                 Price = book.Price,
+                Author = book.Author,
+                PublishedDate = book.PublishedDate,
                 BookCategories = book.Categories.Select(c => new BookCategory { CategoryId = c.Id }).ToList(),
                 Image = book.Image
             };
@@ -69,7 +71,7 @@ namespace BookStore.DataAccess.Repositories
             return bookEntity.Id;
         }
 
-        public async Task<Guid> Update(Guid id, string title, string description, decimal price, List<Category> categories, string image)
+        public async Task<Guid> Update(Guid id, string title, string description, decimal price, string author, DateTimeOffset publishedDate, List<Category> categories, string image)
         {
             var bookEntity = await _context.Books
                 .Include(b => b.BookCategories)
@@ -80,6 +82,8 @@ namespace BookStore.DataAccess.Repositories
                 bookEntity.Title = title;
                 bookEntity.Description = description;
                 bookEntity.Price = price;
+                bookEntity.Author = author;
+                bookEntity.PublishedDate = publishedDate;
                 bookEntity.Image = image;
 
                 _context.BookCategories.RemoveRange(bookEntity.BookCategories);

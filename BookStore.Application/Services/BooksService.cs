@@ -24,20 +24,20 @@ public class BooksService : IBooksService
         return await _booksRepository.GetById(id) ?? throw new Exception("Book not found");
     }
     
-    public async Task<Guid> CreateBook(Guid id, string title, string description, decimal price, List<Guid> categoryIds, string image)
+    public async Task<Guid> CreateBook(Guid id, string title, string description, decimal price, string author,  DateTimeOffset publishedDate, List<Guid> categoryIds, string image)
     {
         var categories = _categoriesRepository.Get().Result.Where(c => categoryIds.Contains(c.Id)).ToList();
         
-        var book = Book.Create(id, title, description, price, categories, image).Book;
+        var book = Book.Create(id, title, description, price, author, publishedDate, categories, image).Book;
         
         return await _booksRepository.Create(book);
     }
     
-    public async Task<Guid> UpdateBook(Guid id, string title, string description, decimal price, List<Guid> categoryIds, string image)
+    public async Task<Guid> UpdateBook(Guid id, string title, string description, decimal price, string author, DateTimeOffset publishedDate, List<Guid> categoryIds, string image)
     {
         var categories = _categoriesRepository.Get().Result.Where(c => categoryIds.Contains(c.Id)).ToList();
         
-        return await _booksRepository.Update(id, title, description, price, categories, image);
+        return await _booksRepository.Update(id, title, description, price, author, publishedDate, categories, image);
     }
     
     public async Task<Guid> DeleteBook(Guid id)

@@ -10,6 +10,10 @@
 
         public decimal Price { get; set; }
         
+        public string Author { get; set; } = string.Empty;
+        
+        public DateTimeOffset PublishedDate { get; set; }
+        
         public List<BookCategory> BookCategories { get; set; } = new List<BookCategory>();
         
         public string Image { get; set; } = string.Empty;

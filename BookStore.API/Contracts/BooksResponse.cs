@@ -7,5 +7,7 @@ public record BooksResponse(
     string Title,
     string Description,
     decimal Price,
+    string Author,
+    DateTimeOffset PublishedDate,
     List<Category> Categories,
     string Image);
