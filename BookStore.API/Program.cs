@@ -44,7 +44,7 @@ app.MapControllers();
 app.UseCors(x =>
 {
     x.WithHeaders().AllowAnyHeader();
-    x.WithOrigins("http://localhost:3000");
+    x.WithOrigins("https://book-store-rostik.netlify.app");
     x.WithMethods().AllowAnyMethod();
 });
 
